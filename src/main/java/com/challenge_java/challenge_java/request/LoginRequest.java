@@ -1,6 +1,10 @@
 package com.challenge_java.challenge_java.request;
 
+import com.challenge_java.challenge_java.model.entity.Phone;
+import com.challenge_java.challenge_java.model.entity.User;
+
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class LoginRequest {
 	@NotBlank
