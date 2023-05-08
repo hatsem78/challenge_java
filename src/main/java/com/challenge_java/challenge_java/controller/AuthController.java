@@ -1,5 +1,6 @@
 package com.challenge_java.challenge_java.controller;
 
+import com.challenge_java.challenge_java.exceptionscustom.EntityNotFoundException;
 import com.challenge_java.challenge_java.model.entity.ERole;
 import com.challenge_java.challenge_java.model.entity.Phone;
 import com.challenge_java.challenge_java.model.entity.Role;
@@ -9,6 +10,7 @@ import com.challenge_java.challenge_java.model.services.UserDetailsImpl;
 import com.challenge_java.challenge_java.model.services.UserServicesImpl;
 import com.challenge_java.challenge_java.request.LoginRequest;
 import com.challenge_java.challenge_java.request.SignupRequest;
+import com.challenge_java.challenge_java.response.JwtResponse;
 import com.challenge_java.challenge_java.response.MessageResponse;
 import com.challenge_java.challenge_java.response.UserInfoResponse;
 import com.challenge_java.challenge_java.response.UserSignUpResponse;
@@ -60,7 +62,9 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(
+            @Valid @RequestBody LoginRequest loginRequest
+    ) throws EntityNotFoundException {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -69,32 +73,55 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-
         User userUpdate = userServices.findByUsername(loginRequest.getUsername()).get();
 
-        userUpdate.setLastLogin(new Date());
-        userUpdate = userServices.update(userUpdate);
+
+        if (loginRequest.getJwtType()) {
+
+            ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+            userUpdate.setLastLogin(new Date());
+            userUpdate.setToken(jwtCookie.toString());
+            userUpdate = userServices.update(userUpdate);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                    .body(new UserInfoResponse(
+                                    userUpdate.getIds(),
+                                    userUpdate.getCreateAt(),
+                                    userUpdate.getLastLogin(),
+                                    userUpdate.getToken(),
+                                    userUpdate.getActive(),
+                                    userUpdate.getUsername(),
+                                    userUpdate.getEmail(),
+                                    userUpdate.getPassword(),
+                                    userUpdate.getPhone()
+                            )
+                    );
+        } else {
+
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            userUpdate.setLastLogin(new Date());
+            userUpdate.setToken(jwt);
+            userUpdate = userServices.update(userUpdate);
+            return ResponseEntity.ok(new JwtResponse(
+                    userUpdate.getIds(),
+                    userUpdate.getCreateAt(),
+                    userUpdate.getLastLogin(),
+                    userUpdate.getToken(),
+                    userUpdate.getActive(),
+                    userUpdate.getUsername(),
+                    userUpdate.getEmail(),
+                    userUpdate.getPassword(),
+                    userUpdate.getPhone()
+            ));
+        }
 
 
-
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UserInfoResponse(
-                        userUpdate.getIds(),
-                        userUpdate.getCreateAt(),
-                        userUpdate.getLastLogin(),
-                        userUpdate.getToken(),
-                        userUpdate.getActive(),
-                        userUpdate.getUsername(),
-                        userUpdate.getEmail(),
-                        userUpdate.getPassword(),
-                        userUpdate.getPhone()
-                    )
-                );
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(
+            @Valid @RequestBody SignupRequest signUpRequest
+    ) throws EntityNotFoundException {
+
         if (userServices.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
@@ -104,7 +131,9 @@ public class AuthController {
         }
 
         /* Create new user's account */
-        User user = new User(signUpRequest.getUsername(),
+        User user = new User(
+                signUpRequest.getEmail().split("@")[0],
+                signUpRequest.getEmail().split("@")[0],
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
@@ -150,25 +179,27 @@ public class AuthController {
         }
         user.setIds(UUID.randomUUID().toString());
         user.setRoles(roles);
-
-        userServices.save(user);
+        user.setActive(false);
+        user.setCreateAt(new Date());
+        user.setCreateAt(new Date());
+        user = userServices.save(user);
 
         return ResponseEntity.ok()
                 .body(
-                    new UserSignUpResponse(
-                        user.getUsername(),
-                        user.getIds(),
-                        user.getEmail(),
-                        user.getCreateAt(),
-                        user.getLastLogin(),
-                        user.getToken(),
-                        user.getActive()
-                    )
+                        new UserSignUpResponse(
+                                user.getIds(),
+                                user.getName(),
+                                user.getEmail(),
+                                user.getCreateAt().toString(),
+                                user.getLastLogin().toString(),
+                                user.getToken(),
+                                user.getActive()
+                        )
                 );
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<?> logoutUser() {
+    public ResponseEntity<?> logoutUser() throws EntityNotFoundException {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));

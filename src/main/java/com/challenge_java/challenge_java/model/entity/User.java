@@ -33,13 +33,15 @@ public class User {
     private String username;
 
     @Size(max = 50)
+    private String name;
+
+    @Size(max = 50)
     @NotBlank
     @ValidEmail
     private String email;
 
     @Size(max = 120)
     @NotBlank
-    @PasswordMatches
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -54,6 +56,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "phone_id"))
     private Set<Phone> phone = new HashSet<>();
+
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
     private Date createAt;
@@ -70,6 +73,18 @@ public class User {
     public User() {
         this.ids = UUID.randomUUID().toString();
         this.isActive = false;
+    }
+
+    public User(
+            String name,
+            String username,
+            String email,
+            String password
+    ) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.name = name;
     }
 
     public Set<Phone> getPhone() {
@@ -110,12 +125,6 @@ public class User {
 
     public void setActive(Boolean active) {
         isActive = active;
-    }
-
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
     }
 
     public Long getId() {
@@ -168,5 +177,11 @@ public class User {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

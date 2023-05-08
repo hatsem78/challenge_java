@@ -1,6 +1,7 @@
 package com.challenge_java.challenge_java.controller;
 
 
+import com.challenge_java.challenge_java.exceptionscustom.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserWorldController {
 
     @GetMapping(value = {"/index", "/", "/home"})
-    public String index() {
+    public String index() throws EntityNotFoundException {
         return "Welcome to the technical challenge";
     }
 }

@@ -7,8 +7,8 @@ public class UserSignUpResponse {
 	private String ids;
 	private String username;
 	private String email;
-	private Date createAt;
-	private Date lastLogin;
+	private String createAt;
+	private String lastLogin;
 	private String token;
 	private Boolean isActive;
 
@@ -16,8 +16,8 @@ public class UserSignUpResponse {
 			String ids,
 			String username,
 			String email,
-			Date createAt,
-			Date lastLogin,
+			String createAt,
+			String lastLogin,
 			String token,
 			Boolean isActive
 	) {
@@ -54,19 +54,19 @@ public class UserSignUpResponse {
 		this.email = email;
 	}
 
-	public Date getCreateAt() {
+	public String getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(Date createAt) {
+	public void setCreateAt(String createAt) {
 		this.createAt = createAt;
 	}
 
-	public Date getLastLogin() {
+	public String getLastLogin() {
 		return lastLogin;
 	}
 
-	public void setLastLogin(Date lastLogin) {
+	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 
@@ -85,4 +85,6 @@ public class UserSignUpResponse {
 	public void setActive(Boolean active) {
 		isActive = active;
 	}
+
+
 }

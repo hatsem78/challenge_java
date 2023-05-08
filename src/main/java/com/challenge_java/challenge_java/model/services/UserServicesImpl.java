@@ -34,7 +34,7 @@ public class UserServicesImpl implements IUser {
 
     @Override
     public User update(User user) {
-        return null;
+        return userRepository.save(user);
     }
     @Override
     public User save(User user) {

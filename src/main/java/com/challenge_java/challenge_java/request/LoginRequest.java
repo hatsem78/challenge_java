@@ -13,6 +13,12 @@ public class LoginRequest {
 	@NotBlank
 	private String password;
 
+	private Boolean jwtType;
+
+	public LoginRequest() {
+		this.jwtType = false;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -27,5 +33,13 @@ public class LoginRequest {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Boolean getJwtType() {
+		return jwtType;
+	}
+
+	public void setJwtType(Boolean jwtType) {
+		this.jwtType = jwtType;
 	}
 }

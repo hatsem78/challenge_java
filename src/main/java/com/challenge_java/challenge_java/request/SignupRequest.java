@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public class SignupRequest {
-    @NotBlank
-    @Size(min = 3, max = 20)
-    private String username;
+
+    @Size(min = 3, max = 50)
+    private String name;
 
     @NotBlank
     @Size(max = 50)
@@ -33,23 +33,23 @@ public class SignupRequest {
     }
 
     public SignupRequest(
-            String username,
+            String name,
             String password,
             String email,
             List<PhoneRequest> phoneList
     ) {
-        this.username = username;
+        this.name = name;
         this.password = password;
         this.email = email;
         this.phones = phoneList;
     }
 
     public String getUsername() {
-        return username;
+        return name;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.name = name;
     }
 
     public String getEmail() {
@@ -85,10 +85,6 @@ public class SignupRequest {
     }
 
     public static SignupRequest build(User user, List<PhoneRequest> phoneList) {
-    /*List<GrantedAuthority> authorities = user.getRoles().stream()
-        .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-        .collect(Collectors.toList());*/
-
         return new SignupRequest(
                 user.getUsername(),
                 user.getPassword(),
