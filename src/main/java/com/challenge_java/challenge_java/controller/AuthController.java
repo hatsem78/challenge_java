@@ -191,8 +191,8 @@ public class AuthController {
                                 user.getName(),
                                 user.getEmail(),
                                 user.getCreateAt().toString(),
-                                user.getLastLogin().toString(),
-                                user.getToken(),
+                                "",
+                                "",
                                 user.getActive()
                         )
                 );
