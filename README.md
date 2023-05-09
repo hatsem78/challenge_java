@@ -35,9 +35,9 @@ ejemplo:
     curl -H 'Accept: application/json' -H "Authorization: Bearer ${TOKEN}" https://{hostname}/api/myresource
 ---
 
-#Explicacion breve  Seguridad de primavera
+# Explicacion breve  Seguridad de primavera
 
-* WebSecurityConfiges el quid de nuestra implementación de seguridad. Configura cors, csrf, gestión de sesiones, reglas para recursos protegidos. También podemos ampliar y personalizar la configuración predeterminada que contiene los elementos a continuación.
+* WebSecurityConfiges el queda de nuestra implementación de seguridad. Configura cors, csrf, gestión de sesiones, reglas para recursos protegidos. También podemos ampliar y personalizar la configuración predeterminada que contiene los elementos a continuación.
 ( WebSecurityConfigurerAdapterestá obsoleto desde Spring 2.7.0, puede verificar el código fuente para la actualización. Más detalles en:
 WebSecurityConfigurerAdapter Obsoleto en Spring Boot )
 
