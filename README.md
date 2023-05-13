@@ -1,14 +1,14 @@
 ### Challenge java spring boot
 
 ## Descripción general del ejemplo de inicio de sesión de Spring Boot Security
-Construin de laaplicación Spring Boot + Spring Security con JWT en eso:
+Construcción de la aplicación Spring Boot + Spring Security con JWT en eso:
 
-    * El usuario puede registrarse en una nueva cuenta (registro) o iniciar sesión con nombre de usuario y contraseña.
-    * Por el rol del Usuario (administrador, moderador, usuario), autorizamos al Usuario a acceder a los recursos.
+    - El usuario puede registrarse en una nueva cuenta (registro) o iniciar sesión con nombre de usuario y contraseña.
+    - Por el rol del Usuario (administrador, moderador, usuario), autorizamos al Usuario a acceder a los recursos.
 
 Estas son las API que debemos proporcionar:
 
-    Methods	Urls	Actions
+    Metodos	Urls:
     
     POST	/api/auth/signup	signup nuevo usuario
     POST	/api/auth/signin	login de un usuario
@@ -20,7 +20,7 @@ Estas son las API que debemos proporcionar:
 
 La base de datos que usaremos es H2 al configurar la dependencia del proyecto y la fuente de datos.
 
-##Flujo de Spring Boot Security Ejemplo de inicio de sesión
+## Flujo de Spring Boot Security Ejemplo de inicio de sesión
 El diagrama muestra el flujo de cómo implementamos el proceso de registro de usuario, inicio/cierre de sesión de usuario y autorización.
 
 ![diagrama_secuencia.png](imagen/diagrama_secuencia.png)
@@ -35,31 +35,31 @@ ejemplo:
     curl -H 'Accept: application/json' -H "Authorization: Bearer ${TOKEN}" https://{hostname}/api/myresource
 ---
 
-# Explicacion breve  Seguridad de primavera
+# Explicacion breve  Seguridad
 
 * WebSecurityConfiges el queda de nuestra implementación de seguridad. Configura cors, csrf, gestión de sesiones, reglas para recursos protegidos. También podemos ampliar y personalizar la configuración predeterminada que contiene los elementos a continuación.
 ( WebSecurityConfigurerAdapterestá obsoleto desde Spring 2.7.0, puede verificar el código fuente para la actualización. Más detalles en:
 WebSecurityConfigurerAdapter Obsoleto en Spring Boot )
 
-* UserDetailsServicela interfaz tiene un método para cargar Usuario por nombre de usuario y devuelve un UserDetailsobjeto que Spring Security puede usar para autenticación y validación.
+* UserDetailsService: La interfaz tiene un método para cargar Usuario por nombre de usuario y devuelve un UserDetailsobjeto que Spring Security puede usar para autenticación y validación.
 
-* UserDetailscontiene la información necesaria (como: nombre de usuario, contraseña, autoridades) para construir un objeto de autenticación.
+* UserDetails: Contiene la información necesaria (como: nombre de usuario, contraseña, autoridades) para construir un objeto de autenticación.
 
-* UsernamePasswordAuthenticationTokenobtiene {nombre de usuario, contraseña} de la Solicitud de inicio de sesión, AuthenticationManagerlo usará para autenticar una cuenta de inicio de sesión.
+* UsernamePasswordAuthenticationToken: Obtiene {nombre de usuario, contraseña} de la Solicitud de inicio de sesión, AuthenticationManagerlo usará para autenticar una cuenta de inicio de sesión.
 
-* AuthenticationManagertiene un DaoAuthenticationProvider(con la ayuda de UserDetailsService& PasswordEncoder) para validar UsernamePasswordAuthenticationTokenel objeto. Si tiene éxito, AuthenticationManagerdevuelve un objeto de autenticación completo (incluidas las autorizaciones otorgadas).
+* AuthenticationManager: Tiene un DaoAuthenticationProvider(con la ayuda de UserDetailsService& PasswordEncoder) para validar UsernamePasswordAuthenticationTokenel objeto. Si tiene éxito, AuthenticationManager devuelve un objeto de autenticación completo (incluidas las autorizaciones otorgadas).
 
-* OncePerRequestFilterrealiza una única ejecución por cada petición a nuestra API. Proporciona un doFilterInternal()método que implementaremos analizando y validando JWT, cargando los detalles del usuario (usando UserDetailsService), verificando la autorización (usando UsernamePasswordAuthenticationToken).
+* OncePerRequestFilter: realiza una única ejecución por cada petición a nuestra API. Proporciona un doFilterInternal() método que implementaremos analizando y validando JWT, cargando los detalles del usuario (usando UserDetailsService), verificando la autorización (usando UsernamePasswordAuthenticationToken).
 
-* AuthenticationEntryPointdetectará un error de autenticación.
+* AuthenticationEntryPoint: detectará un error de autenticación.
 
-El repositorio contiene UserRepositoryy RoleRepositorypara trabajar con la base de datos, se importará al controlador .
+El repositorio contiene UserRepositoryy RoleRepository para trabajar con la base de datos, se importará al controlador .
 
 El controlador recibe y maneja la solicitud después de que fue filtrada por OncePerRequestFilter.
 
-* AuthControllermaneja las solicitudes de registro/inicio de sesión
+* AuthController: maneja las solicitudes de registro/inicio de sesión
 
-* TestControllertiene acceso a métodos de recursos protegidos con validaciones basadas en roles.
+* UserWorldController: Tiene acceso a métodos de recursos protegidos con validaciones basadas en roles.
 
 Comprenda la arquitectura profundamente y capte la descripción general más fácilmente:
 Spring Boot Architecture para JWT con Spring Security
