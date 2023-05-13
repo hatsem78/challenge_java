@@ -23,7 +23,7 @@ La base de datos que usaremos es H2 al configurar la dependencia del proyecto y 
 ##Flujo de Spring Boot Security Ejemplo de inicio de sesión
 El diagrama muestra el flujo de cómo implementamos el proceso de registro de usuario, inicio/cierre de sesión de usuario y autorización.
 
-![diagrama_secuencia.png](imagen_uml%2Fdiagrama_secuencia.png)
+![diagrama_secuencia.png](imagen/diagrama_secuencia.png)
 
 # Diagrama de componentes
 
